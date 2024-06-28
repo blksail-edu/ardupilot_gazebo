@@ -16,47 +16,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # --------------------------------------------------------------------------- #
 # Find gz-sim and dependencies.
+find_package(gz-cmake3 REQUIRED)
+set(GZ_CMAKE_VER ${gz-cmake3_VERSION_MAJOR})
 
-# Harmonic (default)
-if("$ENV{GZ_VERSION}" STREQUAL "harmonic" OR NOT DEFINED "ENV{GZ_VERSION}")
-  find_package(gz-cmake3 REQUIRED)
-  set(GZ_CMAKE_VER ${gz-cmake3_VERSION_MAJOR})
-
-  gz_find_package(gz-common5 REQUIRED)
-  set(GZ_COMMON_VER ${gz-common5_VERSION_MAJOR})
-
-  gz_find_package(gz-rendering8 REQUIRED)
-  set(GZ_RENDERING_VER ${gz-rendering8_VERSION_MAJOR})
-
-  gz_find_package(gz-sim8 REQUIRED)
-  set(GZ_SIM_VER ${gz-sim8_VERSION_MAJOR})
-
-  message(STATUS "Compiling against Gazebo Harmonic")
-# Garden
-elseif("$ENV{GZ_VERSION}" STREQUAL "garden")
-  find_package(gz-cmake3 REQUIRED)
-  set(GZ_CMAKE_VER ${gz-cmake3_VERSION_MAJOR})
-
-  gz_find_package(gz-common5 REQUIRED)
-  set(GZ_COMMON_VER ${gz-common5_VERSION_MAJOR})
-
-  gz_find_package(gz-rendering7 REQUIRED)
-  set(GZ_RENDERING_VER ${gz-rendering7_VERSION_MAJOR})
-  
-  gz_find_package(gz-sim7 REQUIRED)
-  set(GZ_SIM_VER ${gz-sim7_VERSION_MAJOR})
-
-  message(STATUS "Compiling against Gazebo Garden")
-else()  
-  message(FATAL_ERROR "Unsupported GZ_VERSION: $ENV{GZ_VERSION}")
-endif()
+gz_find_package(gz-sim8 REQUIRED)
+set(GZ_SIM_VER ${gz-sim8_VERSION_MAJOR})
 
 # --------------------------------------------------------------------------- #
+# Find RapidJSON.
 find_package(RapidJSON REQUIRED)
-find_package(OpenCV REQUIRED)
-
-pkg_check_modules(GST REQUIRED gstreamer-1.0 gstreamer-app-1.0)
-
 
 # --------------------------------------------------------------------------- #
 # Build plugin.
@@ -85,34 +53,6 @@ target_link_libraries(ParachutePlugin PRIVATE
   gz-sim${GZ_SIM_VER}::gz-sim${GZ_SIM_VER}
 )
 
-add_library(CameraZoomPlugin
-  SHARED
-  src/CameraZoomPlugin.cc
-)
-target_include_directories(CameraZoomPlugin PRIVATE
-  include
-)
-target_link_libraries(CameraZoomPlugin PRIVATE
-  gz-common${GZ_COMMON_VER}::gz-common${GZ_COMMON_VER}
-  gz-rendering${GZ_RENDERING_VER}::gz-rendering${GZ_RENDERING_VER}
-  gz-sim${GZ_SIM_VER}::gz-sim${GZ_SIM_VER}
-)
-
-add_library(GstCameraPlugin
-  SHARED
-  src/GstCameraPlugin.cc
-)
-target_include_directories(GstCameraPlugin PRIVATE
-  include
-  ${OpenCV_INCLUDE_DIRS}
-  ${GST_INCLUDE_DIRS}
-)
-target_link_libraries(GstCameraPlugin PRIVATE
-  gz-sim${GZ_SIM_VER}::gz-sim${GZ_SIM_VER}
-  ${OpenCV_LIBS}
-  ${GST_LINK_LIBRARIES}
-)
-
 # --------------------------------------------------------------------------- #
 # Install.
 
@@ -120,8 +60,6 @@ install(
   TARGETS
   ArduPilotPlugin
   ParachutePlugin
-  CameraZoomPlugin
-  GstCameraPlugin
   DESTINATION lib/${PROJECT_NAME}
 )
 
