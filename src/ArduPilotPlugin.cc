@@ -47,6 +47,7 @@
 #include <gz/sim/Model.hh>
 #include <gz/sim/World.hh>
 #include <gz/sim/Util.hh>
+#include <gz/math/Cone.hh>
 #include <gz/math/Filter.hh>
 #include <gz/math/Helpers.hh>
 #include <gz/math/Pose3.hh>
