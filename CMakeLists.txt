@@ -113,6 +113,11 @@ target_link_libraries(GstCameraPlugin PRIVATE
   ${GST_LINK_LIBRARIES}
 )
 
+target_include_directories(ArduPilotPlugin PRIVATE
+    include
+    /usr/include/gz/math7  # Adjust path if necessary
+)
+
 # --------------------------------------------------------------------------- #
 # Install.
 
