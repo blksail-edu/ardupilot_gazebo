@@ -20,8 +20,6 @@
 #include <array>
 #include <memory>
 
-#include <gz/math/Cone.hh>
-
 #include <gz/sim/System.hh>
 #include <sdf/sdf.hh>
 
