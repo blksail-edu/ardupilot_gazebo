@@ -8,7 +8,7 @@ This is the official ArduPilot plugin for [Gazebo](https://gazebosim.org/home).
 It replaces the previous
 [`ardupilot_gazebo`](https://github.com/khancyr/ardupilot_gazebo)
 plugin and provides support for the recent releases of the Gazebo simulator
-[(Gazebo Garden)](https://gazebosim.org/docs/garden/install) and [(Gazebo Harmonic)](https://gazebosim.org/docs/harmonic/install).
+[(Gazebo Garden)](https://gazebosim.org/docs/garden/install), [(Gazebo Harmonic)](https://gazebosim.org/docs/harmonic/install) and [(Gazebo Ionic)](https://gazebosim.org/docs/ionic/install).
 
 It also adds the following features:
 
@@ -31,7 +31,7 @@ Ubuntu 20.04 in order to have the OpenGL support required for the
 (Big Sur, Monterey and Venturua; Intel and M1 devices).
 
 Follow the instructions for a binary install of
-[Gazebo Garden](https://gazebosim.org/docs/garden/install) or [Gazebo Harmonic](https://gazebosim.org/docs/harmonic/install)
+[Gazebo Garden](https://gazebosim.org/docs/garden/install) or [Gazebo Harmonic](https://gazebosim.org/docs/harmonic/install) or [Gazebo Ionic](https://gazebosim.org/docs/ionic/install)
 and verify that Gazebo is running correctly.
 
 Set up an [ArduPilot development environment](https://ardupilot.org/dev/index.html).
@@ -71,10 +71,10 @@ Use rosdep with
 to manage all dependencies. This is driven off of the environment variable `GZ_VERSION`.
 
 ```bash
-export GZ_VERSION=harmonic # or garden
+export GZ_VERSION=harmonic # or garden or ionic
 sudo bash -c 'wget https://raw.githubusercontent.com/osrf/osrf-rosdep/master/gz/00-gazebo.list -O /etc/ros/rosdep/sources.list.d/00-gazebo.list'
 rosdep update
-rosdep resolve gz-harmonic # or gz-garden
+rosdep resolve gz-harmonic # or gz-garden or gz-ionic
 # Navigate to your ROS workspace before the next command.
 rosdep install --from-paths src --ignore-src -y
 ```
@@ -88,7 +88,7 @@ brew install opencv gstreamer
 ```
 
 Ensure the `GZ_VERSION` environment variable is set to either
-`garden` or `harmonic`.
+`garden` or `harmonic` or `ionic`.
 
 Clone the repo and build:
 
@@ -231,6 +231,47 @@ Display the streamed video:
 ```bash
 gst-launch-1.0 -v udpsrc port=5600 caps='application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264' ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false
 ```
+
+View the streamed camera frames in [QGC](http://qgroundcontrol.com/):
+
+`Open QGC > Application Settings > Video Settings > Select UDP h.264 Video Stream & use port 5600`
+
+![qgc_video_settings](https://github.com/user-attachments/assets/61fa4c2a-37e2-47cf-abcf-9f110d9c2015)
+
+
+### 4. Using 3d Gimbal
+
+The Iris model is equipped with a 3d gimbal and camera that can be controlled directly in MAVProxy using the RC overrides.
+
+#### Run Gazebo
+
+```bash
+gz sim -v4 -r iris_runway.sdf
+```
+
+#### Run ArduPilot SITL with a specified parameter file
+
+```bash
+cd ardupilot
+
+sim_vehicle.py -D -v ArduCopter -f JSON --add-param-file=$HOME/ardupilot_gazebo/config/gazebo-iris-gimbal.parm --console --map
+```
+
+Control action for gimbal over RC channel:
+
+| Action | Channel | RC Low | RC High |
+| ------------- | ------------- | ------------- | ------------- |
+| Roll | RC6 | Roll Left | Roll Right |
+| Pitch | RC7 | Pitch Down | Pitch Up |
+| Yaw | RC8 | Yaw Left | Yaw Right |
+
+Example usage:
+
+`rc 6 1100` - Gimbal rolls left
+
+`rc 7 1900` - Gimbal pitch upwards
+
+`rc 8 1500` - Gimbal yaw neutral
 
 ## Models
 

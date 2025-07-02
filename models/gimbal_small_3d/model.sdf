@@ -74,11 +74,11 @@
       <axis>
         <xyz>0 1 0</xyz>
         <dynamics>
-          <damping>0.5</damping>
+          <damping>0.01</damping>
         </dynamics>
         <limit>
-          <lower>-1.57079632</lower>
-          <upper>1.57079632</upper>
+          <lower>-3.1415926</lower>
+          <upper>3.1415926</upper>
         </limit>
       </axis>
       <pose>0.0105 0.065 -0.002 0 0 0</pose>
@@ -122,11 +122,11 @@
       <axis>
         <xyz>0 0 1</xyz>
         <dynamics>
-          <damping>0.5</damping>
+          <damping>0.01</damping>
         </dynamics>
         <limit>
-          <lower>-1.57079632</lower>
-          <upper>1.57079632</upper>
+          <lower>-3.1415926</lower>
+          <upper>3.1415926</upper>
         </limit>
       </axis>
       <pose>0.0099 0.002 -0.05 0 0 0</pose>
@@ -227,11 +227,11 @@
       <axis>
         <xyz>1 0 0</xyz>
         <dynamics>
-          <damping>0.5</damping>
+          <damping>0.01</damping>
         </dynamics>
         <limit>
-          <lower>-1.57079632</lower>
-          <upper>1.57079632</upper>
+          <lower>-3.1415926</lower>
+          <upper>3.1415926</upper>
         </limit>
       </axis>
       <pose>0.045 0.0021 0.0199 0 0 0</pose>
